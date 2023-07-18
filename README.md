@@ -42,15 +42,7 @@
 
 # Download
 
-- **uYouPlus** (or you can call it uYou+) requires iOS or iPadOS 14.0 or later. The latest version of **uYouPlus** can be found in the [Release tab](https://github.com/qnblackcat/uYouPlus/releases/latest).
-
-- For AltStore user: 
-
-  - My official AltStore repo: https://qnblackcat.github.io/AltStore/
-
-  - [Open in AltStore (v18.14.1-3.0)](https://tinyurl.com/yv6wrxjz) - It will take a while to install because AltStore needs to download the IPA first.
-
-- Version info: _(last update: Apr 28)_
+- **uYouPlus** (or you can call it uYou+) requires iOS or iPadOS 14.0 or later. The latest version of **uYouPlus** can be found in the [Release tab](https://github.com/brynts/uYouPlus/releases/latest).
 
 <details>
   <summary>Expand ℹ️</summary>
@@ -89,9 +81,6 @@ See [Installation - Wiki](https://github.com/qnblackcat/uYouPlus/wiki/Installati
 - [**level3tjg**](https://twitter.com/level3tjg): https://ko-fi.com/level3tjg
 - [**BandarHL**](https://twitter.com/bandarhl): https://www.paypal.com/paypalme/BandarHL
 - [**julioverne**](https://twitter.com/ijulioverne): https://www.patreon.com/julioverne
-- [**Galactic-dev**](https://twitter.com/dev_galactic):   
-  - Paypal: https://www.paypal.com/paypalme/DBrett684 
-  - Venmo: https://venmo.com/u/DavidBrett
 
 # FAQ
 
