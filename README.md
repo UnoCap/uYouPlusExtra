@@ -48,11 +48,13 @@
 See [Installation - Wiki](https://github.com/qnblackcat/uYouPlus/wiki/Installation).
 
 # Support the developers
+- [**qnblackcat**](https://twitter.com/t70438299): https://www.paypal.com/paypalme/qnblackcat
 - [**MiRO92**](https://twitter.com/miro92): https://github.com/MiRO92/uYou-for-YouTube#support
 - [**Poomsmart**](https://twitter.com/poomsmart): https://poomsmart.github.io
 - [**level3tjg**](https://twitter.com/level3tjg): https://ko-fi.com/level3tjg
 - [**BandarHL**](https://twitter.com/bandarhl): https://www.paypal.com/paypalme/BandarHL
 - [**julioverne**](https://twitter.com/ijulioverne): https://www.patreon.com/julioverne
+- [**brynts**](https://twitter.com/brynts): https://www.paypal.com/paypalme/brynts
 
 # FAQ
 
