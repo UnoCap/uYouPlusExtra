@@ -1,7 +1,3 @@
-[submodule "Tweaks/YTUHD"]
-	path = Tweaks/YTUHD
-	url = https://github.com/PoomSmart/YTUHD.git
-	branch = master
 [submodule "Tweaks/YouPiP"]
 	path = Tweaks/YouPiP
 	url = https://github.com/PoomSmart/YouPiP.git
@@ -22,13 +18,6 @@
 	path = Extensions
 	url = https://github.com/CokePokes/YoutubeExtensions.git
 	branch = main
-[submodule "Tweaks/YTABConfig"]
-	path = Tweaks/YTABConfig
-	url = https://github.com/PoomSmart/YTABConfig.git
-	branch = main
-[submodule "Tweaks/FLEXing"]
-	path = Tweaks/FLEXing
-	url = https://github.com/NSExceptional/FLEXing
 [submodule "Tweaks/Alderis"]
 	path = Tweaks/Alderis
 	url = https://github.com/hbang/Alderis.git
@@ -38,7 +27,16 @@
 [submodule "Tweaks/DontEatMyContent"]
 	path = Tweaks/DontEatMyContent
 	url = https://github.com/therealFoxster/DontEatMyContent
-[submodule "Tweaks/iSponsorBlock"]
-	path = Tweaks/iSponsorBlock
-	url = https://github.com/Galactic-Dev/iSponsorBlock.git
-	branch = master
+[submodule "Tweaks/YTVideoOverlay"]
+	path = Tweaks/YTVideoOverlay
+	url = https://github.com/PoomSmart/YTVideoOverlay.git
+	branch = main
+[submodule "Tweaks/YTClassicVideoQuality"]
+	path = Tweaks/YTClassicVideoQuality
+	url = https://github.com/PoomSmart/YTClassicVideoQuality.git
+	branch = main
+[submodule "Tweaks/YouQuality"]
+	path = Tweaks/YouQuality
+	url = https://github.com/PoomSmart/YouQuality.git
+	branch = main
+
