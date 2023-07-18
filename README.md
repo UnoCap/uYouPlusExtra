@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/brynts/uYouPlus/blob/main/uyou-1.png?raw=true">
+</p>
+
 # Credits
 - Special thanks to all the developers who have contributed to uYouPlus! 
 
