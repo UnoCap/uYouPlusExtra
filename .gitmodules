@@ -39,4 +39,7 @@
 	path = Tweaks/YouQuality
 	url = https://github.com/PoomSmart/YouQuality.git
 	branch = main
-
+[submodule "Tweaks/YTUHD"]
+	path = Tweaks/YTUHD
+	url = https://github.com/PoomSmart/YTUHD.git
+	branch = master
