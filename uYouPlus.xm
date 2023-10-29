@@ -757,7 +757,10 @@ static void replaceTab(YTIGuideResponse *response) {
     }
 
 // Hide the Comment Section under the Video Player - @arichorn
-    if ((IsEnabled(@"hideCommentSection_enabled")) && ([self.accessibilityIdentifier isEqualToString:@"id.ui.comments_entry_point_teaser"] || [self.accessibilityIdentifier isEqualToString:@"id.ui.comments_entry_point_simplebox"] || [self.accessibilityIdentifier isEqualToString:@"id.ui.video_metadata_carousel"] || [self.accessibilityIdentifier isEqualToString:@"id.ui.carousel_header"])) {
+    if ((IsEnabled(@"hideCommentSection_enabled")) && ([self.accessibilityIdentifier isEqualToString:@"id.ui.comments_entry_point_teaser"] 
+    || [self.accessibilityIdentifier isEqualToString:@"id.ui.comments_entry_point_simplebox"] 
+    || [self.accessibilityIdentifier isEqualToString:@"id.ui.video_metadata_carousel"] 
+    || [self.accessibilityIdentifier isEqualToString:@"id.ui.carousel_header"])) {
         self.hidden = YES;
         self.opaque = YES;
         self.userInteractionEnabled = NO;
@@ -781,48 +784,43 @@ static void replaceTab(YTIGuideResponse *response) {
 }
 %end
 
+// Hide Shorts Cells - @MiRO92 & @arichorn
 %hook YTAsyncCollectionView
 - (id)cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = %orig;
-    
-    if ([cell isKindOfClass:objc_lookUpClass("_ASCollectionViewCell")]) {
-        _ASCollectionViewCell *cell = %orig;
-        if ([cell respondsToSelector:@selector(node)]) {
+    if (IsEnabled(@"hideShortsCells_enabled")) {
+        if ([cell isKindOfClass:NSClassFromString(@"_ASCollectionViewCell")]) {
+            _ASCollectionViewCell *asCell = (%orig);
+            if ([asCell respondsToSelector:@selector(node)]) {
+                NSString *identifier = [[asCell node] accessibilityIdentifier];
+                if ([identifier isEqualToString:@"eml.shorts-video-item"] ||
+                    [identifier isEqualToString:@"eml.shelf_header"] ||
+                    [identifier isEqualToString:@"statement_banner.view"] ||
+                    [identifier isEqualToString:@"compact.view"] ||
+                    [identifier isEqualToString:@"eml.inline_shorts"]) {
+                    [self removeShortsAndFeaturesAdsAtIndexPath:indexPath];
+                }
+            }
+        }
+    }
+    // Hide Remix Button
+    if (IsEnabled(@"hideRemixButton_enabled") && [[[cell node] accessibilityIdentifier] isEqualToString:@"id.video.remix.button"]) {
+        [self removeShortsAndFeaturesAdsAtIndexPath:indexPath];
+
+        // Hide Community Posts
+        if (IsEnabled(@"hideCommunityPosts_enabled")) {
             NSString *idToRemove = [[cell node] accessibilityIdentifier];
-            
-            // Hide Community Posts
-            if (IsEnabled(@"hideCommunityPosts_enabled") && ([idToRemove rangeOfString:@"id.ui.backstage.post"].location != NSNotFound || [idToRemove rangeOfString:@"id.ui.backstage.original_post"].location != NSNotFound)) {
-                [self removeCellsAtIndexPath:indexPath];
+            if ([idToRemove rangeOfString:@"id.ui.backstage.post"].location != NSNotFound ||
+                [idToRemove rangeOfString:@"id.ui.backstage.original_post"].location != NSNotFound) {
+                [self removeShortsAndFeaturesAdsAtIndexPath:indexPath];
             }
         }
     }
     return cell;
 }
 %new
-- (void)removeCellsAtIndexPath:(NSIndexPath *)indexPath {
-    [self deleteItemsAtIndexPaths:@[indexPath]];
-}
-%end
-
-// Hide Shorts Cells - @arichorn
-%hook _ASDisplayView
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = %orig;
-
-    NSString *idToRemove = cell.reuseIdentifier;
-    if (IsEnabled(@"hideShortsCells_enabled") && ([idToRemove isEqualToString:@"eml.shorts-grid"] 
-    || [idToRemove isEqualToString:@"eml.inline_shorts"] 
-    || [idToRemove isEqualToString:@"eml.shorts-video-item"] 
-    || [idToRemove isEqualToString:@"eml.shelf_header"])) {
-        UIResponder *nextResponder = self.nextResponder;
-        while (nextResponder && ![nextResponder isKindOfClass:NSClassFromString(@"UICollectionViewController")]) {
-            nextResponder = nextResponder.nextResponder;
-        }
-        if ([nextResponder respondsToSelector:@selector(removeCellsAtIndexPath:)]) {
-            [nextResponder performSelector:@selector(removeCellsAtIndexPath:) withObject:indexPath];
-        }
-    }
-    return cell;
+- (void)removeShortsAndFeaturesAdsAtIndexPath:(NSIndexPath *)indexPath {
+    [self deleteItemsAtIndexPaths:[NSArray arrayWithObject:indexPath]];
 }
 %end
 
