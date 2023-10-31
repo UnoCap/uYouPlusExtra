@@ -864,7 +864,7 @@ static void replaceTab(YTIGuideResponse *response) {
 // Hide the (Remix Button) under the Video Player - Legacy Version - @arichorn
 %hook YTISlimMetadataButtonSupportedRenderers
 - (id)slimButton_buttonRenderer {
-    if (IsEnabled(@"hideRemixButton_enabled") && [self shouldHideButton]) {
+    if (IsEnabled(@"hideRemixButton_enabled") && [self respondsToSelector:@selector(shouldHideButton)] && [self shouldHideButton]) {
         return nil;
     }
     return %orig;
