@@ -4,7 +4,7 @@
 	branch = master
 [submodule "Tweaks/YouPiP"]
 	path = Tweaks/YouPiP
-	url = https://github.com/PoomSmart/YouPiP.git
+	url = https://github.com/NguyenASang/YouPiP.git
 	branch = main
 [submodule "Tweaks/YouMute"]
 	path = Tweaks/YouMute
