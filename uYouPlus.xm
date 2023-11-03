@@ -262,7 +262,6 @@ static void repositionCreateTab(YTIGuideResponse *response) {
 %end
 
 %hook YTIPivotBarRenderer
-
 - (void)layoutSubviews {
     %orig;
     YTPivotBarView *pivotBarView = [self valueForKey:@"_pivotBarView"];
@@ -279,8 +278,7 @@ static void repositionCreateTab(YTIGuideResponse *response) {
             supportedRenderer = renderer;
             break;
         }
-    }
-    
+    } 
     if (supportedRenderer) {
         [[supportedRenderer pivotBarItemRenderer] setPivotIdentifier:@"SettingsTab"];
        
@@ -290,7 +288,6 @@ static void repositionCreateTab(YTIGuideResponse *response) {
         [[supportedRenderer pivotBarItemRenderer] setNavigationEndpoint:[self createNavigationEndpoint:browseEndpoint]];
     }
 }
-
 - (YTINavigationEndpoint *)createNavigationEndpoint:(YTIBrowseEndpoint *)browseEndpoint {
     YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) new];
     [navigationEndpoint setBrowseEndpoint:browseEndpoint];
@@ -303,21 +300,21 @@ static void repositionCreateTab(YTIGuideResponse *response) {
     return @"SettingsTab";
 }
 - (YTICommand *)navigationEndpoint {
-    YTICommand *navigationEndpoint = %orig;
-    
-    if (!navigationEndpoint) {
-        YTINavigationEndpoint *customEndpoint = [[YTINavigationEndpoint alloc] init];
+    YTICommand *originalEndpoint = %orig;
+
+    if (!originalEndpoint) {
+        YTINavigationEndpoint *customEndpoint = [%c(YTINavigationEndpoint) new];
+        YTIRootApplicationSettingsEndpoint *settingsEndpoint = [%c(YTIRootApplicationSettingsEndpoint) new];
         
-        YTINavigationEndpointRoot_applicationSettingsEndpoint *settingsEndpoint = [[YTINavigationEndpointRoot_applicationSettingsEndpoint alloc] init];
         [settingsEndpoint setHack:YES];
         
         [customEndpoint setRootApplicationSettingsEndpoint:settingsEndpoint];
         
-        [self setNavigationEndpoint:customEndpoint];
-        
-        return customEndpoint;
+        return (YTICommand *)customEndpoint;
     }
-    return navigationEndpoint;
+    return originalEndpoint;
+}
+- (void)setNavigationEndpoint:(YTICommand *)navigationEndpoint {
 }
 %end
 
