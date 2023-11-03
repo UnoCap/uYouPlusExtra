@@ -202,8 +202,14 @@
 - (UIView *)findCellContainingButton:(UIButton *)button;
 @end
 
-@implementation _ASDisplayView
-@synthesize cornerRadius = _cornerRadius;
+@implementation _ASDisplayView (CornerRadius)
+- (CGFloat)cornerRadius {
+    NSNumber *value = objc_getAssociatedObject(self, @selector(cornerRadius));
+    return [value floatValue];
+}
+- (void)setCornerRadius:(CGFloat)cornerRadius {
+    objc_setAssociatedObject(self, @selector(cornerRadius), @(cornerRadius), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 @end
 
 @interface YTAutonavEndscreenView : UIView
