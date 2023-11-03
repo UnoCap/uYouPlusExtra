@@ -236,25 +236,29 @@ static void repositionCreateTab(YTIGuideResponse *response) {
 %end
 
 %hook YTPivotBarItemView
-
 @property (nonatomic, strong) YTPivotBarItemView *itemView7;
-
 - (void)layoutSubviews {
     %orig;
-    
     self.itemView7 = [YTPivotBarItemView new];
     [self.itemView7 setTitle:@"Settings"];
-    [self.itemView7 setIcon:[UIImage imageNamed:@"SETTINGS"]];
+    [self.itemView7 setIcon:[self getCustomIcon]];
     
-    YTINavigationEndpointRoot_applicationSettingsEndpoint *settingsEndpoint = [%c(YTINavigationEndpointRoot_applicationSettingsEndpoint) alloc];
-    [settingsEndpoint setHack:YES];
-    YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) alloc];
-    [navigationEndpoint setRootApplicationSettingsEndpoint:settingsEndpoint];
+    YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) new];
+    [navigationEndpoint setRootApplicationSettingsEndpoint:[self getCustomSettingsEndpoint]];
     [self.itemView7 setNavigationEndpoint:navigationEndpoint];
     
-    NSMutableArray *modifiedItemViews = [self.itemViews mutableCopy];
+    NSMutableArray *modifiedItemViews = [[self itemViews] mutableCopy];
     [modifiedItemViews addObject:self.itemView7];
-    self.itemViews = modifiedItemViews;
+    
+    [self setValue:modifiedItemViews forKey:@"itemViews"];
+}
+- (UIImage *)getCustomIcon {
+    return [UIImage imageNamed:@"SETTINGS"];
+}
+- (id)getCustomSettingsEndpoint {
+    YTINavigationEndpointRoot_applicationSettingsEndpoint *settingsEndpoint = [%c(YTINavigationEndpointRoot_applicationSettingsEndpoint) new];
+    [settingsEndpoint setHack:YES];
+    return settingsEndpoint;
 }
 %end
 
@@ -263,6 +267,18 @@ static void repositionCreateTab(YTIGuideResponse *response) {
     %orig;
     YTPivotBarView *pivotBarView = [self valueForKey:@"_pivotBarView"];
     YTPivotBarItemView *itemView7 = [pivotBarView valueForKey:@"itemView7"];
+    
+    [itemView7 setPivotIdentifier:@"SettingsTab"];
+    
+    YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) new];
+    [navigationEndpoint setBrowseEndpoint:[self getCustomBrowseEndpoint]];
+    [itemView7 setNavigationEndpoint:navigationEndpoint];
+}
+
+- (id)getCustomBrowseEndpoint {
+    YTIBrowseEndpoint *browseEndpoint = [%c(YTIBrowseEndpoint) new];
+    [browseEndpoint setBrowseId:@"SettingsTab"];
+    return browseEndpoint;
 }
 %end
 
