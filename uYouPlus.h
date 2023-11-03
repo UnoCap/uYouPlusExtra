@@ -202,6 +202,10 @@
 - (UIView *)findCellContainingButton:(UIButton *)button;
 @end
 
+@implementation _ASDisplayView
+@synthesize cornerRadius = _cornerRadius;
+@end
+
 @interface YTAutonavEndscreenView : UIView
 @end
 
