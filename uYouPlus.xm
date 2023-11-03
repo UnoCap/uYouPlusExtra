@@ -239,27 +239,26 @@ static void repositionCreateTab(YTIGuideResponse *response) {
 @property (nonatomic, strong) YTPivotBarItemView *itemView7;
 - (void)layoutSubviews {
     %orig;
-    self.itemView7 = [YTPivotBarItemView new];
-    [self.itemView7 setTitle:@"Settings"];
-    [self.itemView7 setIcon:[self getCustomIcon]];
-    
-    YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) new];
-    [navigationEndpoint setRootApplicationSettingsEndpoint:[self getCustomSettingsEndpoint]];
-    [self.itemView7 setNavigationEndpoint:navigationEndpoint];
-    
-    NSMutableArray *modifiedItemViews = [[self itemViews] mutableCopy];
+    self.itemView7 = [[YTPivotBarItemView alloc] init];
+    [self.itemView7.navigationButton setTitle:@"Settings" forState:UIControlStateNormal];
+    [self.itemView7.navigationButton setImage:[self getCustomIcon] forState:UIControlStateNormal];
+
+    // [self.itemView7.navigationButton addTarget:self action:@selector(settingsButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+
+    NSMutableArray *modifiedItemViews = [[self valueForKey:@"itemViews"] mutableCopy];
     [modifiedItemViews addObject:self.itemView7];
-    
+
     [self setValue:modifiedItemViews forKey:@"itemViews"];
 }
 - (UIImage *)getCustomIcon {
     return [UIImage imageNamed:@"SETTINGS"];
 }
-- (id)getCustomSettingsEndpoint {
-    YTINavigationEndpointRoot_applicationSettingsEndpoint *settingsEndpoint = [%c(YTINavigationEndpointRoot_applicationSettingsEndpoint) new];
-    [settingsEndpoint setHack:YES];
-    return settingsEndpoint;
-}
+// You can remove this method if not needed - arichorn
+//- (id)getCustomSettingsEndpoint {
+//    YTINavigationEndpointRoot_applicationSettingsEndpoint *settingsEndpoint = [[YTINavigationEndpointRoot_applicationSettingsEndpoint alloc] init];
+//    [settingsEndpoint setHack:YES];
+//    return settingsEndpoint;
+//}
 %end
 
 %hook YTIPivotBarRenderer
@@ -283,24 +282,25 @@ static void repositionCreateTab(YTIGuideResponse *response) {
 %end
 
 %hook YTIPivotBarItemRenderer
-- (id)initWithStyle:(id)arg1 {
-    self = %orig;
-    if (self) {
-        [self setPivotIdentifier:@"SettingsTab"];
+- (NSString *)pivotIdentifier {
+    return @"SettingsTab";
+}
+- (YTICommand *)navigationEndpoint {
+    YTICommand *navigationEndpoint = %orig;
+    
+    if (!navigationEndpoint) {
+        YTINavigationEndpoint *customEndpoint = [[YTINavigationEndpoint alloc] init];
         
-        YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) new];
-        YTINavigationEndpointRoot_applicationSettingsEndpoint *settingsEndpoint = [%c(YTINavigationEndpointRoot_applicationSettingsEndpoint) new];
+        YTINavigationEndpointRoot_applicationSettingsEndpoint *settingsEndpoint = [[YTINavigationEndpointRoot_applicationSettingsEndpoint alloc] init];
         [settingsEndpoint setHack:YES];
-        [navigationEndpoint setRootApplicationSettingsEndpoint:settingsEndpoint];
-        [self setNavigationEndpoint:navigationEndpoint];
         
-        YTIRenderer *iconRenderer = [%c(YTIRenderer) new];
-        YTIRendererIcon *icon = [%c(YTIRendererIcon) new];
-        [icon setIconType:@"SETTINGS"];
-        [iconRenderer setRendererIcon:icon];
-        [self setIcon:iconRenderer];
+        [customEndpoint setRootApplicationSettingsEndpoint:settingsEndpoint];
+        
+        [self setNavigationEndpoint:customEndpoint];
+        
+        return customEndpoint;
     }
-    return self;
+    return navigationEndpoint;
 }
 %end
 
