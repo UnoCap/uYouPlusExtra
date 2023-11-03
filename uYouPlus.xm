@@ -235,6 +235,59 @@ static void repositionCreateTab(YTIGuideResponse *response) {
 }
 %end
 
+%hook YTPivotBarItemView
+
+@property (nonatomic, strong) YTPivotBarItemView *itemView7;
+
+- (void)layoutSubviews {
+    %orig;
+    
+    self.itemView7 = [YTPivotBarItemView new];
+    [self.itemView7 setTitle:@"Settings"];
+    [self.itemView7 setIcon:[UIImage imageNamed:@"SETTINGS"]];
+    
+    YTINavigationEndpointRoot_applicationSettingsEndpoint *settingsEndpoint = [%c(YTINavigationEndpointRoot_applicationSettingsEndpoint) alloc];
+    [settingsEndpoint setHack:YES];
+    YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) alloc];
+    [navigationEndpoint setRootApplicationSettingsEndpoint:settingsEndpoint];
+    [self.itemView7 setNavigationEndpoint:navigationEndpoint];
+    
+    NSMutableArray *modifiedItemViews = [self.itemViews mutableCopy];
+    [modifiedItemViews addObject:self.itemView7];
+    self.itemViews = modifiedItemViews;
+}
+%end
+
+%hook YTIPivotBarRenderer
+- (void)layoutSubviews {
+    %orig;
+    YTPivotBarView *pivotBarView = [self valueForKey:@"_pivotBarView"];
+    YTPivotBarItemView *itemView7 = [pivotBarView valueForKey:@"itemView7"];
+}
+%end
+
+%hook YTIPivotBarItemRenderer
+- (id)initWithStyle:(id)arg1 {
+    self = %orig;
+    if (self) {
+        [self setPivotIdentifier:@"SettingsTab"];
+        
+        YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) new];
+        YTINavigationEndpointRoot_applicationSettingsEndpoint *settingsEndpoint = [%c(YTINavigationEndpointRoot_applicationSettingsEndpoint) new];
+        [settingsEndpoint setHack:YES];
+        [navigationEndpoint setRootApplicationSettingsEndpoint:settingsEndpoint];
+        [self setNavigationEndpoint:navigationEndpoint];
+        
+        YTIRenderer *iconRenderer = [%c(YTIRenderer) new];
+        YTIRendererIcon *icon = [%c(YTIRendererIcon) new];
+        [icon setIconType:@"SETTINGS"];
+        [iconRenderer setRendererIcon:icon];
+        [self setIcon:iconRenderer];
+    }
+    return self;
+}
+%end
+
 // YTMiniPlayerEnabler: https://github.com/level3tjg/YTMiniplayerEnabler/
 %hook YTWatchMiniBarViewController
 - (void)updateMiniBarPlayerStateFromRenderer {
