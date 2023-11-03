@@ -262,22 +262,39 @@ static void repositionCreateTab(YTIGuideResponse *response) {
 %end
 
 %hook YTIPivotBarRenderer
+
 - (void)layoutSubviews {
     %orig;
     YTPivotBarView *pivotBarView = [self valueForKey:@"_pivotBarView"];
-    YTPivotBarItemView *itemView7 = [pivotBarView valueForKey:@"itemView7"];
     
-    [itemView7 setPivotIdentifier:@"SettingsTab"];
+    NSMutableArray<YTIPivotBarSupportedRenderers *> *itemsArray = [self itemsArray];
     
-    YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) new];
-    [navigationEndpoint setBrowseEndpoint:[self getCustomBrowseEndpoint]];
-    [itemView7 setNavigationEndpoint:navigationEndpoint];
+    // Find the specific item renderer you want to modify (e.g., Settings tab)
+    YTIPivotBarSupportedRenderers *supportedRenderer = nil;
+    for (YTIPivotBarSupportedRenderers *renderer in itemsArray) {
+        // Modify the condition to match the desired item (e.g., Settings tab)
+        if ([[renderer pivotBarItemRenderer] isKindOfClass:NSClassFromString(@"YTIPivotBarItemView")] &&
+            [[[renderer pivotBarItemRenderer] title] isEqualToString:@"Settings"]) {
+            
+            supportedRenderer = renderer;
+            break;
+        }
+    }
+    
+    if (supportedRenderer) {
+        [[supportedRenderer pivotBarItemRenderer] setPivotIdentifier:@"SettingsTab"];
+       
+        YTIBrowseEndpoint *browseEndpoint = [%c(YTIBrowseEndpoint) new];
+        [browseEndpoint setBrowseId:@"SettingsTab"];
+        
+        [[supportedRenderer pivotBarItemRenderer] setNavigationEndpoint:[self createNavigationEndpoint:browseEndpoint]];
+    }
 }
 
-- (id)getCustomBrowseEndpoint {
-    YTIBrowseEndpoint *browseEndpoint = [%c(YTIBrowseEndpoint) new];
-    [browseEndpoint setBrowseId:@"SettingsTab"];
-    return browseEndpoint;
+- (YTINavigationEndpoint *)createNavigationEndpoint:(YTIBrowseEndpoint *)browseEndpoint {
+    YTINavigationEndpoint *navigationEndpoint = [%c(YTINavigationEndpoint) new];
+    [navigationEndpoint setBrowseEndpoint:browseEndpoint];
+    return navigationEndpoint;
 }
 %end
 
